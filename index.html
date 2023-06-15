@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Interest Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            overflow-y: hidden;
+            background-color: #0b0d22;
+            font-family: "Inter", sans-serif;
+            color: #24feee;
+        }
+
+        h1 {
+            margin-bottom: 4rem;
+            font-size: 39px;
+            color: #24feee;
+        }
+
+        .card {
+            background-color: #111535;
+            padding: 1rem 20px 2rem 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .card-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: end;
+            text-align: left;
+        }
+
+        .column {
+            width: 37%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .loan-amount-conatiner {
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"] {
+            max-width: 12rem;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: 700;
+            display: inline-block;
+            vertical-align: middle;
+            background-color: transparent;
+            border: 1px solid #8c8f9f;
+            border-radius: 5px;
+            color: #45fef1;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+            -webkit-appearance: none;
+            height: 4px;
+            background: white;
+            background: linear-gradient(to right, #24feee 0% 50%, white 50% 100%);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            background: #24feee;
+            -webkit-appearance: none;
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+        }
+
+        label {
+            min-width: 9rem;
+            display: inline-block;
+            font-size: 20px;
+            color: white;
+            vertical-align: middle;
+            text-align: left;
+            margin-right: 2rem;
+        }
+
+        .interest-info,
+        .tenure-info {
+            color: white;
+            margin: 0.5rem 0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .interest-info span,
+        .tenure-info span {
+            margin-right: 2rem;
+            min-width: 9rem;
+        }
+
+        .monthly-interest-card {
+            background-color: transparent;
+            border: 2px solid #828dff;
+            border-radius: 10px;
+            color: #828dff;
+            padding: 1.5rem;
+            font-weight: 700;
+            margin-top: 5rem;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .monthly-interest-card span:first-child {
+            color: white;
+        }
+
+        canvas {
+            max-width: 320px;
+            height: 320px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            margin: 1rem 0;
+        }
+
+        .chart-label div:first-of-type {
+            width: 50%;
+            text-align: left;
+        }
+
+        .chart-label div {
+            text-align: center;
+            width: 50%;
+        }
+
+        .chart-label span {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 800px) {
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 3rem;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            .loan-amount-conatiner {
+                margin-bottom: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            label {
+                font-size: 1rem !important;
+                min-width: unset;
+                margin-right: unset;
+            }
+
+            input[type="text"] {
+                padding: 1rem;
+                max-width: 8rem;
+                font-size: 24px;
+            }
+
+            .interest-info,
+            .tenure-info {
+                font-size: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 1rem;
+            }
+
+            .interest-info span,
+            .tenure-info span {
+                font-size: 1rem;
+                margin-right: unset;
+            }
+
+            .column {
+                width: 100% !important;
+                margin-bottom: 0;
+            }
+
+            .monthly-interest-card {
+                padding: 1rem;
+                margin: 1rem 0;
+                font-size: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            canvas {
+                margin-bottom: 1rem;
+                margin-top: 1rem;
+                max-width: 200px;
+                height: 200px;
+            }
+
+            .chart-label {
+                font-size: 1rem;
+            }
+
+            .chart-label span {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Interest Calculator</h1>
+        <div class="card-content">
+            <div class="column">
+                <div class="loan-amount-conatiner">
+                    <label for="loan-amount">Loan Amount</label>
+                    <input type="text" id="loan-amount" oninput="formatLoanAmount(event)" />
+                </div>
+                <input type="range" id="loan-slider" min="25000" max="500000" step="100" value="100000" />
+                <div class="interest-info">
+                    <span>Interest Rate</span>
+                    <p>1% p.m (12% p.a)</p>
+                </div>
+                <div class="tenure-info">
+                    <span>Tenure</span>
+                    <p>12 months</p>
+                </div>
+                <div class="monthly-interest-card">
+                    <span>Monthly Interest</span><span id="monthly-interest"></span>
+                </div>
+            </div>
+            <div class="column">
+                <canvas id="donut-chart"></canvas>
+                <div class="chart-label">
+                    <div>
+                        <span style="background-color: #45fef1"></span>Loan Amount
+                    </div>
+                    <div><span id="loan-label"></span></div>
+                </div>
+                <div class="chart-label">
+                    <div>
+                        <span style="background-color: #828dff"></span>Yearly Interest
+                    </div>
+                    <div><span id="interest-label"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var $loanSlider = $("#loan-slider");
+        var $loanAmount = $("#loan-amount");
+        var $loanSlider = $("#loan-slider");
+        var $monthlyInterest = $("#monthly-interest");
+        var $loanLabel = $("#loan-label");
+        var $interestLabel = $("#interest-label");
+        var ctx = $("#donut-chart");
+
+        var donutChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                datasets: [
+                    {
+                        data: [$loanSlider.val(), $loanSlider.val() * 0.12],
+                        backgroundColor: ["#45FEF1", "#828DFF"],
+                        weight: 0.05,
+                    },
+                ],
+            },
+        });
+
+        $loanSlider.on("input", updateValues);
+        updateValues();
+    
+        function updateValues() {
+            var loanAmount = Number($loanSlider.val());
+            var monthlyInterest = Math.round((loanAmount * 0.12) / 12);
+            var percentage =
+                (($loanSlider.val() - $loanSlider.attr("min")) /
+                    ($loanSlider.attr("max") - $loanSlider.attr("min"))) *
+                100;
+            $loanSlider.css(
+                "background",
+                `linear-gradient(to right, #24FEEE 0% ${percentage}%, white ${percentage}% 100%)`
+            );
+            $loanAmount.val(formatCurrency(loanAmount));
+            $monthlyInterest.text(formatCurrency(monthlyInterest));
+            $loanLabel.text(formatCurrency(loanAmount));
+            $interestLabel.text(formatCurrency(loanAmount * 0.12));
+
+            donutChart.data.datasets[0].data = [
+                loanAmount,
+                Math.round(loanAmount * 0.12),
+            ];
+            donutChart.update();
+        }
+
+        function formatLoanAmount(event) {
+            const loanAmountInput = event.target;
+            let loanAmount = loanAmountInput.value.replace(/\D/g, "");
+            loanAmount = Math.min(loanAmount, 500000);
+            loanAmountInput.value = formatCurrency(loanAmount);
+            $loanSlider.val(loanAmount);
+            updateValues();
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(amount);
+        }
+    </script>
+</body>
+
+</html>
