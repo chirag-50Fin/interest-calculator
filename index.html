@@ -240,7 +240,7 @@
                 <input type="range" id="loan-slider" min="25000" max="500000" step="100" value="100000" />
                 <div class="interest-info">
                     <span>Interest Rate</span>
-                    <p>10.99% per annum</p>
+                    <p>11% per annum</p>
                 </div>
                 <div class="tenure-info">
                     <span>Tenure</span>
@@ -297,7 +297,7 @@
     
         function updateValues() {
             var loanAmount = Number($loanSlider.val());
-            var monthlyInterest = Math.round((loanAmount * 0.1099) / 12);
+            var monthlyInterest = Math.round((loanAmount * 0.11) / 12);
             var percentage =
                 (($loanSlider.val() - $loanSlider.attr("min")) /
                     ($loanSlider.attr("max") - $loanSlider.attr("min"))) *
@@ -309,11 +309,11 @@
             $loanAmount.val(formatCurrency(loanAmount));
             $monthlyInterest.text(formatCurrency(monthlyInterest));
             $loanLabel.text(formatCurrency(loanAmount));
-            $interestLabel.text(formatCurrency(loanAmount * 0.1099));
+            $interestLabel.text(formatCurrency(loanAmount * 0.11));
 
             donutChart.data.datasets[0].data = [
                 loanAmount,
-                Math.round(loanAmount * 0.1099),
+                Math.round(loanAmount * 0.11),
             ];
             donutChart.update();
         }
